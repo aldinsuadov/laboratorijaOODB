@@ -124,37 +124,22 @@
                     </div>
                 </div>
 
-                <!-- Average Time to Publish -->
+                <!-- Average Time to Publish (only in days) -->
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="p-6">
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Prosječno vrijeme od termina do objave nalaza</h3>
                         
-                        @if($avgDays > 0 || $avgHours > 0)
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="bg-purple-50 border border-purple-200 rounded-lg p-6">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <p class="text-sm font-medium text-purple-800">Prosječno u danima</p>
-                                            <p class="text-3xl font-bold text-purple-900 mt-2">{{ $avgDays }}</p>
-                                            <p class="text-xs text-purple-600 mt-1">dana</p>
-                                        </div>
-                                        <svg class="h-12 w-12 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                        </svg>
+                        @if($avgDays > 0)
+                            <div class="bg-purple-50 border border-purple-200 rounded-lg p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-purple-800">Prosječno u danima</p>
+                                        <p class="text-3xl font-bold text-purple-900 mt-2">{{ $avgDays }}</p>
+                                        <p class="text-xs text-purple-600 mt-1">dana</p>
                                     </div>
-                                </div>
-                                
-                                <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-6">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <p class="text-sm font-medium text-indigo-800">Prosječno u satima</p>
-                                            <p class="text-3xl font-bold text-indigo-900 mt-2">{{ $avgHours }}</p>
-                                            <p class="text-xs text-indigo-600 mt-1">sati</p>
-                                        </div>
-                                        <svg class="h-12 w-12 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                    </div>
+                                    <svg class="h-12 w-12 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
                                 </div>
                             </div>
                         @else

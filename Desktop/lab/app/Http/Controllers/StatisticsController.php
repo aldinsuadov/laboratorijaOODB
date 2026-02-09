@@ -33,13 +33,31 @@ class StatisticsController extends Controller
         ];
 
         // 4. Prosječno vrijeme od termina do objave nalaza
-        $averageTimeToPublish = TestResult::select(
-                DB::raw('AVG(TIMESTAMPDIFF(HOUR, CONCAT(appointments.appointment_date, " ", COALESCE(appointments.appointment_time, "00:00:00")), test_results.published_at)) as avg_hours'),
-                DB::raw('AVG(TIMESTAMPDIFF(DAY, appointments.appointment_date, DATE(test_results.published_at))) as avg_days')
-            )
-            ->join('appointments', 'test_results.appointment_id', '=', 'appointments.id')
-            ->whereNotNull('test_results.published_at')
-            ->first();
+        // Database-agnostic query that works on both MySQL and PostgreSQL
+        $driver = DB::connection()->getDriverName();
+        
+        if ($driver === 'pgsql') {
+            // PostgreSQL: 
+            // - For hours: Combine date + time into timestamp, then calculate difference
+            //   EXTRACT(EPOCH FROM (timestamp - timestamp)) gives seconds, divide by 3600 for hours
+            // - For days: date - date gives integer days directly (no EXTRACT needed)
+            $averageTimeToPublish = TestResult::select(
+                    DB::raw("AVG(EXTRACT(EPOCH FROM (test_results.published_at - (appointments.appointment_date + COALESCE(appointments.appointment_time::time, '00:00:00'::time)))) / 3600) as avg_hours"),
+                    DB::raw("AVG((test_results.published_at::date - appointments.appointment_date)) as avg_days")
+                )
+                ->join('appointments', 'test_results.appointment_id', '=', 'appointments.id')
+                ->whereNotNull('test_results.published_at')
+                ->first();
+        } else {
+            // MySQL: Original query
+            $averageTimeToPublish = TestResult::select(
+                    DB::raw('AVG(TIMESTAMPDIFF(HOUR, CONCAT(appointments.appointment_date, " ", COALESCE(appointments.appointment_time, "00:00:00")), test_results.published_at)) as avg_hours'),
+                    DB::raw('AVG(TIMESTAMPDIFF(DAY, appointments.appointment_date, DATE(test_results.published_at))) as avg_days')
+                )
+                ->join('appointments', 'test_results.appointment_id', '=', 'appointments.id')
+                ->whereNotNull('test_results.published_at')
+                ->first();
+        }
 
         $avgHours = $averageTimeToPublish && $averageTimeToPublish->avg_hours ? round($averageTimeToPublish->avg_hours, 2) : 0;
         $avgDays = $averageTimeToPublish && $averageTimeToPublish->avg_days ? round($averageTimeToPublish->avg_days, 2) : 0;

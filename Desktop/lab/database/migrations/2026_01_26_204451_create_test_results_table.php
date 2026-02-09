@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('appointment_id')->unique()->constrained()->onDelete('cascade');
             $table->text('result_data')->nullable();
-            $table->enum('status', ['pending', 'completed'])->default('pending');
+            // Koristimo string umjesto ENUM zbog bolje kompatibilnosti sa PostgreSQL-om
+            $table->string('status')->default('pending');
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
         });

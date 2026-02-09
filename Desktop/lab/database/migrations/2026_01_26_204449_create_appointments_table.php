@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreignId('test_type_id')->constrained()->onDelete('cascade');
             $table->date('appointment_date');
             $table->time('appointment_time');
-            $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
+            // Koristimo string umjesto ENUM zbog bolje kompatibilnosti sa PostgreSQL-om
+            $table->string('status')->default('pending');
             $table->text('notes')->nullable();
             $table->timestamps();
         });

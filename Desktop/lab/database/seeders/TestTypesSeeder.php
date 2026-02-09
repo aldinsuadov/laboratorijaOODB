@@ -13,11 +13,41 @@ class TestTypesSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create 10-15 test types
-        $count = rand(10, 15);
-        
-        TestType::factory($count)->create();
-        
-        $this->command->info("Created {$count} test types.");
+        $testTypes = [
+            [
+                'name' => 'Kompletna krvna slika (KKS)',
+                'description' => 'Osnovna hematološka analiza koja obuhvata broj eritrocita, leukocita, trombocita, hemoglobin i hematokrit.',
+                'price' => 15.00,
+            ],
+            [
+                'name' => 'Biohemija – osnovni panel',
+                'description' => 'Analiza parametara funkcije jetre i bubrega (ALT, AST, urea, kreatinin, elektroliti).',
+                'price' => 25.00,
+            ],
+            [
+                'name' => 'Lipidni profil',
+                'description' => 'Određivanje ukupnog holesterola, HDL, LDL i triglicerida u serumu.',
+                'price' => 20.00,
+            ],
+            [
+                'name' => 'Šećer u krvi (glukoza)',
+                'description' => 'Mjerenje koncentracije glukoze u plazmi natašte ili nasumično.',
+                'price' => 8.00,
+            ],
+            [
+                'name' => 'Hormoni štitne žlijezde (TSH, FT3, FT4)',
+                'description' => 'Procjena funkcije štitne žlijezde određivanjem hormona TSH, slobodnog T3 i slobodnog T4.',
+                'price' => 35.00,
+            ],
+        ];
+
+        $created = 0;
+
+        foreach ($testTypes as $data) {
+            TestType::create($data);
+            $created++;
+        }
+
+        $this->command->info("Created {$created} predefined test types.");
     }
 }
